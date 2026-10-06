@@ -27,6 +27,19 @@
       return '<button class="tab' + (t === activeTarget ? ' on' : '') + '" data-target="' + esc(t) + '">' + esc(t) + '</button>';
     }).join('');
   }
+  function programCard(p) {
+    var s = findService(p.category);
+    return '<article class="pg' + (p.closed ? ' closed' : '') + (p.best ? ' best' : '') + '">' +
+      '<div class="pg-top"><span class="cat">' + esc(s ? s.title : '') + '</span>' +
+      (p.best ? '<span class="badge">추천</span>' : '') + (p.closed ? '<span class="badge mute">마감</span>' : '') + '</div>' +
+      '<h3>' + esc(p.name) + '</h3><p class="pg-d">' + esc(p.desc) + '</p>' +
+      '<ul class="inc">' + p.includes.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+      '<p class="for">' + p.targets.map(esc).join(' · ') + '</p>' +
+      '<div class="pg-f"><div class="price"><b>' + won(p.price) + '</b><small>/ ' + esc(p.unit) + '</small></div>' +
+      (p.closed ? '<button class="btn btn-g btn-sm" disabled>마감</button>'
+        : '<button class="btn btn-p btn-sm" data-enroll="' + esc(p.id) + '">수강신청</button>') +
+      '</div></article>';
+  }
   var svcFilter = '';
   function renderPrograms() {
     var list = SF.programs.filter(function (p) {
@@ -35,20 +48,44 @@
     });
     var head = svcFilter ? '<div class="filter-note">' + esc(findService(svcFilter).title) +
       ' 프로그램만 보는 중 <button class="link" data-clear="1">전체 보기</button></div>' : '';
-    $('progList').innerHTML = head + (list.length ? list.map(function (p) {
-      var s = findService(p.category);
-      return '<article class="pg' + (p.closed ? ' closed' : '') + (p.best ? ' best' : '') + '">' +
-        '<div class="pg-top"><span class="cat">' + esc(s ? s.title : '') + '</span>' +
-        (p.best ? '<span class="badge">추천</span>' : '') + (p.closed ? '<span class="badge mute">마감</span>' : '') + '</div>' +
-        '<h3>' + esc(p.name) + '</h3><p class="pg-d">' + esc(p.desc) + '</p>' +
-        '<ul class="inc">' + p.includes.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
-        '<p class="for">' + p.targets.map(esc).join(' · ') + '</p>' +
-        '<div class="pg-f"><div class="price"><b>' + won(p.price) + '</b><small>/ ' + esc(p.unit) + '</small></div>' +
-        (p.closed ? '<button class="btn btn-g btn-sm" disabled>마감</button>'
-          : '<button class="btn btn-p btn-sm" data-enroll="' + esc(p.id) + '">수강신청</button>') +
-        '</div></article>';
-    }).join('') : '<p class="empty">해당 대상의 프로그램이 준비 중입니다. 상담으로 문의해주세요.</p>');
+    $('progList').innerHTML = head + (list.length ? list.map(programCard).join('') : '<p class="empty">해당 대상의 프로그램이 준비 중입니다. 상담으로 문의해주세요.</p>');
   }
+  /* ── 프로그램 찾기 ── */
+  var fd = { target: '', concern: -1 };
+  function renderFinder() {
+    $('fdTarget').innerHTML = SF.targets.slice(1).map(function (t) {
+      return '<button type="button" class="opt' + (fd.target === t ? ' on' : '') + '" data-fd-target="' + esc(t) + '">' + esc(t) + '</button>';
+    }).join('');
+    $('fdConcern').innerHTML = SF.concerns.map(function (c, i) {
+      return '<button type="button" class="opt' + (fd.concern === i ? ' on' : '') + '" data-fd-concern="' + i + '">' + esc(c.label) + '</button>';
+    }).join('');
+    if (!fd.target || fd.concern < 0) { $('fdResult').hidden = true; return; }
+    var cat = SF.concerns[fd.concern].category;
+    var open = SF.programs.filter(function (p) { return !p.closed && p.category === cat; });
+    var fit = open.filter(function (p) { return p.targets.indexOf(fd.target) !== -1; });
+    var list = (fit.length ? fit : open).slice(0, 3);
+    var svc = findService(cat);
+    $('fdResult').hidden = false;
+    $('fdResult').innerHTML =
+      '<p class="fd-t"><b>' + esc(fd.target) + '</b> 목표 · <b>' + esc(svc ? svc.title : '') + '</b> 추천 프로그램</p>' +
+      (list.length ? '<div class="prog">' + list.map(programCard).join('') + '</div>'
+        : '<p class="empty">맞는 프로그램을 상담으로 안내해드릴게요.</p>') +
+      '<p class="note">확신이 서지 않으면 <a href="#consult">무료 상담</a>에서 컨설턴트가 직접 골라드립니다.</p>';
+  }
+  function renderTeam() {
+    $('teamList').innerHTML = SF.team.map(function (m, i) {
+      return '<article class="tm"><span class="no">0' + (i + 1) + '</span><b>' + esc(m.role) + '</b><p>' + esc(m.desc) + '</p></article>';
+    }).join('');
+  }
+  function renderReviews() {
+    var r = SF.reviews || [];
+    $('reviews').hidden = !r.length;
+    $('reviewList').innerHTML = r.map(function (v) {
+      return '<figure class="rv"><blockquote>' + esc(v.text) + '</blockquote><figcaption>' + esc(v.who) +
+        (v.program ? ' · ' + esc(v.program) : '') + '</figcaption></figure>';
+    }).join('');
+  }
+
   function renderSteps() {
     $('stepList').innerHTML = SF.process.map(function (s, i) {
       return '<li><span class="no">STEP ' + (i + 1) + '</span><b>' + esc(s[0]) + '</b><p>' + esc(s[1]) + '</p></li>';
@@ -208,7 +245,9 @@
   /* ── 이벤트 연결 ── */
   document.addEventListener('click', function (e) {
     var t = e.target.closest('button'); if (!t) return;
-    if (t.dataset.target) { activeTarget = t.dataset.target; renderTabs(); renderPrograms(); }
+    if (t.dataset.fdTarget) { fd.target = t.dataset.fdTarget; renderFinder(); }
+    else if (t.dataset.fdConcern) { fd.concern = Number(t.dataset.fdConcern); renderFinder(); if (fd.target) $('fdResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    else if (t.dataset.target) { activeTarget = t.dataset.target; renderTabs(); renderPrograms(); }
     else if (t.dataset.enroll) goEnroll(t.dataset.enroll);
     else if (t.dataset.svc) { svcFilter = t.dataset.svc; activeTarget = SF.targets[0]; renderTabs(); renderPrograms(); $('programs').scrollIntoView({ behavior: 'smooth' }); }
     else if (t.dataset.clear) { svcFilter = ''; renderPrograms(); }
@@ -229,6 +268,6 @@
   $('payBtn').onclick = pay;
   window.addEventListener('popstate', route);
 
-  renderServices(); renderTabs(); renderPrograms(); renderSteps(); renderFaq(); renderConsultForm();
+  renderServices(); renderFinder(); renderTabs(); renderPrograms(); renderTeam(); renderReviews(); renderSteps(); renderFaq(); renderConsultForm();
   route();
 })();

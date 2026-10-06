@@ -103,11 +103,37 @@ main{flex:1}
 .inc li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700}
 .for{font-size:13px;color:var(--muted-soft)}
 .pg-f{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid var(--line)}
+.price{white-space:nowrap}
 .price b{font-size:22px;font-weight:800;letter-spacing:-.5px}
 .price small{font-size:13px;color:var(--muted);margin-left:4px}
 .note{font-size:14px;color:var(--muted);margin-top:24px}
 .note a{color:var(--ink);font-weight:600}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:64px 0}
+
+/* 프로그램 찾기 */
+.sub{color:var(--muted);margin-top:8px}
+.finder{background:var(--soft);border-radius:28px;padding:48px}
+.finder .sec-hd{margin-bottom:28px}
+.fd-q{margin-bottom:24px}
+.fd-q b{display:block;font-size:16px;margin-bottom:12px}
+.opt{border:1px solid var(--line);background:var(--canvas);border-radius:var(--r-full);padding:10px 18px;font-size:15px;font-weight:500;color:var(--body);transition:all .15s}
+.opt:hover{border-color:var(--ink)}
+.opt.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.fd-r{border-top:1px solid var(--line);padding-top:28px;margin-top:8px}
+.fd-t{font-size:17px;margin-bottom:20px}
+.fd-t b{color:var(--accent)}
+.fd-r .pg{background:var(--canvas)}
+
+/* 팀 · 후기 */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tm{border-top:2px solid var(--ink);padding-top:20px;display:flex;flex-direction:column;gap:8px}
+.tm .no{font-size:13px;font-weight:700;color:var(--accent)}
+.tm b{font-size:21px;font-weight:700}
+.tm p{color:var(--body);font-size:15px}
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.rv{border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;display:flex;flex-direction:column;gap:16px;justify-content:space-between}
+.rv blockquote{font-size:16px;color:var(--body);line-height:1.7}
+.rv figcaption{font-size:14px;color:var(--muted);font-weight:600}
 
 /* 진행 절차 */
 .steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -233,6 +259,7 @@ main{flex:1}
 @media (max-width:1000px){
   .prog{grid-template-columns:repeat(2,1fr)}
   .steps{grid-template-columns:repeat(2,1fr)}
+  .reviews{grid-template-columns:repeat(2,1fr)}
   .co{grid-template-columns:minmax(0,1fr) 320px;gap:32px}
   .consult{grid-template-columns:1fr;gap:32px;padding:40px}
 }
@@ -256,7 +283,9 @@ main{flex:1}
   .tab{flex-shrink:0}
   .svc{grid-template-columns:1fr}
   .svc-i,.svc-i:nth-child(even){padding:28px 0;border-left:none}
-  .prog,.steps{grid-template-columns:1fr}
+  .prog,.steps,.team,.reviews{grid-template-columns:1fr}
+  .finder{padding:28px 16px;margin:0 calc(var(--gutter)*-1);border-radius:0}
+  .opt{font-size:14px;padding:9px 14px}
   .pg{padding:24px}
   .faq summary{font-size:16px}
   .consult{padding:24px 16px;border-radius:var(--r-lg);margin:0 calc(var(--gutter)*-1);border-radius:0}
