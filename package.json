@@ -1,0 +1,5 @@
+{
+  "name": "studyfy",
+  "private": true,
+  "engines": { "node": ">=18" }
+}
