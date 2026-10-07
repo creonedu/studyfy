@@ -34,6 +34,7 @@ main{flex:1}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .brand b{font-size:20px;font-weight:800;letter-spacing:-.5px}
 .mark{width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:16px;display:grid;place-items:center;flex-shrink:0}
+.brand-sub{font-size:13px;font-weight:600;color:var(--muted);padding-left:10px;margin-left:2px;border-left:1px solid var(--line);white-space:nowrap}
 .menu{display:flex;gap:28px;flex:1}
 .menu a{text-decoration:none;font-size:15px;font-weight:500;color:var(--body)}
 .menu a:hover{color:var(--ink)}
@@ -57,8 +58,13 @@ main{flex:1}
 .hero{padding:112px var(--gutter) 96px}
 .eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 .hero h1{font-size:60px;line-height:1.18;font-weight:800;letter-spacing:-2px}
-.hero .lead{font-size:19px;color:var(--body);margin-top:28px;max-width:640px}
+.hero .lead{font-size:19px;color:var(--body);margin-top:28px;max-width:720px}
 .hero-cta{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap}
+.stages{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px}
+.stages li{border-top:2px solid var(--ink);padding-top:16px;display:flex;flex-direction:column;gap:4px}
+.st-k{font-size:13px;font-weight:700;color:var(--accent)}
+.stages b{font-size:20px;font-weight:700}
+.stages p{font-size:14px;color:var(--muted)}
 .tags{list-style:none;display:flex;gap:8px;flex-wrap:wrap;margin-top:56px}
 .tags li{border:1px solid var(--line);border-radius:var(--r-full);padding:6px 14px;font-size:14px;color:var(--body)}
 
@@ -124,12 +130,44 @@ main{flex:1}
 .fd-t b{color:var(--accent)}
 .fd-r .pg{background:var(--canvas)}
 
-/* 팀 · 후기 */
-.team{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tm{border-top:2px solid var(--ink);padding-top:20px;display:flex;flex-direction:column;gap:8px}
-.tm .no{font-size:13px;font-weight:700;color:var(--accent)}
-.tm b{font-size:21px;font-weight:700}
-.tm p{color:var(--body);font-size:15px}
+/* 수업 방식 */
+.methods{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.md{background:var(--soft);border-radius:var(--r-lg);padding:28px;display:flex;flex-direction:column;gap:10px}
+.md .no{font-size:13px;font-weight:700;color:var(--accent)}
+.md b{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.md p{font-size:15px;color:var(--body)}
+
+/* 컨설턴트 */
+.ph{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-lg);background:var(--soft);display:block}
+.fld{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:var(--r-full);padding:3px 12px}
+.role{font-size:15px;color:var(--muted);font-weight:500}
+.lead-c{display:grid;grid-template-columns:300px minmax(0,1fr);gap:48px;align-items:start;padding-bottom:48px;margin-bottom:48px;border-bottom:1px solid var(--line)}
+.lead-b h3{font-size:32px;font-weight:800;letter-spacing:-.8px;margin-top:12px}
+.lead-b h3 small{font-size:17px;font-weight:600;color:var(--muted);margin-left:6px}
+.motto{font-size:18px;font-weight:700;color:var(--accent);margin-top:12px;font-style:italic}
+.cols{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;margin-top:28px}
+.lb{display:block;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.04em;margin:0 0 8px}
+.lb~.lb{margin-top:20px}
+.cols ul,.tm ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.cols li,.tm li{font-size:15px;color:var(--body)}
+.res{display:flex;flex-direction:column;gap:14px}
+.res>div{display:grid;grid-template-columns:44px 1fr;gap:12px}
+.res dt{font-size:14px;font-weight:700;color:var(--accent)}
+.res dd{font-size:15px;color:var(--body)}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.tm{display:flex;flex-direction:column;gap:8px}
+.tm .ph{margin-bottom:8px}
+.tm .fld{align-self:flex-start}
+.tm h3{font-size:22px;font-weight:700;margin-top:4px}
+.tm ul{border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+
+/* 합격 사례 */
+.adm{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.adm li{border:1px solid var(--line);border-radius:var(--r-md);padding:20px;display:flex;flex-direction:column;gap:4px}
+.adm b{font-size:16px;font-weight:700}
+.adm span{font-size:14px;color:var(--muted)}
+
+/* 후기 */
 .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .rv{border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;display:flex;flex-direction:column;gap:16px;justify-content:space-between}
 .rv blockquote{font-size:16px;color:var(--body);line-height:1.7}
@@ -260,6 +298,11 @@ main{flex:1}
   .prog{grid-template-columns:repeat(2,1fr)}
   .steps{grid-template-columns:repeat(2,1fr)}
   .reviews{grid-template-columns:repeat(2,1fr)}
+  .methods,.team,.adm{grid-template-columns:repeat(2,1fr)}
+  .lead-c{grid-template-columns:240px minmax(0,1fr);gap:32px}
+  .cols{grid-template-columns:1fr;gap:20px}
+  .menu{gap:20px}
+  .brand-sub{display:none}
   .co{grid-template-columns:minmax(0,1fr) 320px;gap:32px}
   .consult{grid-template-columns:1fr;gap:32px;padding:40px}
 }
@@ -283,7 +326,18 @@ main{flex:1}
   .tab{flex-shrink:0}
   .svc{grid-template-columns:1fr}
   .svc-i,.svc-i:nth-child(even){padding:28px 0;border-left:none}
-  .prog,.steps,.team,.reviews{grid-template-columns:1fr}
+  .prog,.steps,.reviews,.methods,.stages{grid-template-columns:1fr}
+  .team{grid-template-columns:repeat(2,1fr);gap:24px 12px}
+  .adm{grid-template-columns:1fr 1fr;gap:8px}
+  .adm li{padding:14px}
+  .adm b{font-size:14px}
+  .lead-c{grid-template-columns:1fr;gap:20px;padding-bottom:32px;margin-bottom:32px}
+  .lead-c .ph{width:60%;max-width:240px}
+  .lead-b h3{font-size:26px}
+  .tm h3{font-size:18px}
+  .tm .fld{font-size:11px;padding:2px 8px}
+  .tm li{font-size:13px}
+  .stages{margin-top:40px;gap:12px}
   .finder{padding:28px 16px;margin:0 calc(var(--gutter)*-1);border-radius:0}
   .opt{font-size:14px;padding:9px 14px}
   .pg{padding:24px}

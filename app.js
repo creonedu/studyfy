@@ -72,10 +72,33 @@
         : '<p class="empty">맞는 프로그램을 상담으로 안내해드릴게요.</p>') +
       '<p class="note">확신이 서지 않으면 <a href="#consult">무료 상담</a>에서 컨설턴트가 직접 골라드립니다.</p>';
   }
-  function renderTeam() {
-    $('teamList').innerHTML = SF.team.map(function (m, i) {
-      return '<article class="tm"><span class="no">0' + (i + 1) + '</span><b>' + esc(m.role) + '</b><p>' + esc(m.desc) + '</p></article>';
+  function renderMethods() {
+    $('methodList').innerHTML = SF.methods.map(function (m, i) {
+      return '<article class="md"><span class="no">0' + (i + 1) + '</span><b>' + esc(m.title) + '</b><p>' + esc(m.desc) + '</p></article>';
     }).join('');
+  }
+  function li(list) { return '<ul>' + list.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
+  function renderTeam() {
+    var lead = SF.team[0], rest = SF.team.slice(1);
+    var head = '<article class="lead-c">' +
+      '<img class="ph" src="' + esc(lead.photo) + '" alt="' + esc(lead.name) + ' ' + esc(lead.role) + '" loading="lazy">' +
+      '<div class="lead-b"><span class="fld">' + esc(lead.field) + '</span>' +
+      '<h3>' + esc(lead.name) + (lead.en ? ' <small>' + esc(lead.en) + '</small>' : '') + '</h3>' +
+      '<p class="role">' + esc(lead.role) + '</p>' + (lead.motto ? '<p class="motto">“' + esc(lead.motto) + '”</p>' : '') +
+      '<div class="cols"><div><b class="lb">학력</b>' + li(lead.education || []) + '<b class="lb">경력</b>' + li(lead.career) + '</div>' +
+      '<div><b class="lb">실적</b><dl class="res">' + (lead.results || []).map(function (r) {
+        return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
+      }).join('') + '</dl></div></div></div></article>';
+    $('teamList').innerHTML = head + '<div class="team">' + rest.map(function (m) {
+      return '<article class="tm"><img class="ph" src="' + esc(m.photo) + '" alt="' + esc(m.name) + ' ' + esc(m.role) + '" loading="lazy">' +
+        '<span class="fld">' + esc(m.field) + '</span><h3>' + esc(m.name) + '</h3><p class="role">' + esc(m.role) + '</p>' + li(m.career) + '</article>';
+    }).join('') + '</div>';
+  }
+  function renderAdmissions() {
+    $('admList').innerHTML = (SF.admissions || []).map(function (a) {
+      return '<li><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></li>';
+    }).join('');
+    $('results').hidden = !(SF.admissions || []).length;
   }
   function renderReviews() {
     var r = SF.reviews || [];
@@ -268,6 +291,6 @@
   $('payBtn').onclick = pay;
   window.addEventListener('popstate', route);
 
-  renderServices(); renderFinder(); renderTabs(); renderPrograms(); renderTeam(); renderReviews(); renderSteps(); renderFaq(); renderConsultForm();
+  renderServices(); renderFinder(); renderTabs(); renderPrograms(); renderMethods(); renderTeam(); renderAdmissions(); renderReviews(); renderSteps(); renderFaq(); renderConsultForm();
   route();
 })();
