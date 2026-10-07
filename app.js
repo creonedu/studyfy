@@ -120,7 +120,9 @@
   function renderReviews() {
     var r = SF.reviews || [];
     $('reviews').hidden = !r.length;
-    $('reviewNote').textContent = SF.reviewsSample ? '※ 아래 후기는 화면 구성을 위한 예시입니다. 실제 수강 후기로 교체될 예정입니다.' : '';
+    $('reviewNote').textContent = SF.reviewsSample
+      ? '※ 아래 후기는 화면 구성을 위한 예시입니다. 실제 수강 후기로 교체될 예정입니다.'
+      : '※ 개인정보보호를 위해 일부 수정되었습니다.';
     var shown = reviewAll ? r : r.slice(0, 6);
     $('reviewList').innerHTML = shown.map(function (v) {
       return '<figure class="rv">' + (SF.reviewsSample ? '<span class="badge mute">예시</span>' : '') +
