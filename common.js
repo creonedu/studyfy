@@ -93,14 +93,12 @@ document.addEventListener('click', function (e) {
 });
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('modal')) $('modal').hidden = true; });
 
-/* 화면 모드(라이트/다크): 기본은 기기 설정, 버튼으로 고르면 그 선택을 기억 */
+/* 화면 모드(라이트/다크): 기본은 화이트, 버튼으로 다크를 고르면 그 선택을 기억 */
 var THEME_KEY = 'studyfy_theme';
 var ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
 var ICON_SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-function systemDark() { return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
 function currentTheme() {
-  var t = document.documentElement.getAttribute('data-theme');
-  return t === 'dark' || t === 'light' ? t : (systemDark() ? 'dark' : 'light');
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 }
 function paintThemeButton() {
   var b = $('themeBtn'); if (!b) return;
@@ -121,11 +119,6 @@ function initThemeToggle() {
     try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
     paintThemeButton();
   };
-  // 버튼으로 고르지 않았다면 기기 설정이 바뀔 때 아이콘도 따라 바뀜
-  if (window.matchMedia) {
-    var mq = window.matchMedia('(prefers-color-scheme: dark)');
-    if (mq.addEventListener) mq.addEventListener('change', paintThemeButton);
-  }
   paintThemeButton();
 }
 

@@ -15,17 +15,7 @@
   --gutter:24px;--max:1120px;
 }
 :root{color-scheme:light}
-/* 다크 모드: 기기 설정을 따르고, 상단 버튼으로 직접 고르면 그 선택을 우선합니다 */
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){color-scheme:dark;
-  --accent:#5577ff;--accent-active:#6a88ff;--accent-soft:rgba(85,119,255,.16);--accent-disabled:#2a3566;--on-accent:#fff;
-  --canvas:#0f1115;--soft:#171a20;--strong:#22262e;
-  --line:#2a2f38;--line-strong:#3c424d;
-  --ink:#eef0f4;--body:#c3c7cf;--muted:#8d939e;--muted-soft:#666c77;
-  --error:#ff6b61;--error-soft:rgba(255,107,97,.1);--scrim:rgba(0,0,0,.6);
-  --on-ink:#0f1115;--header-bg:rgba(15,17,21,.86);
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);}
-}
+/* 다크 모드: 기본은 화이트, 상단 버튼으로 다크를 고르면 그 선택을 기억합니다 */
 :root[data-theme="dark"]{color-scheme:dark;
   --accent:#5577ff;--accent-active:#6a88ff;--accent-soft:rgba(85,119,255,.16);--accent-disabled:#2a3566;--on-accent:#fff;
   --canvas:#0f1115;--soft:#171a20;--strong:#22262e;
