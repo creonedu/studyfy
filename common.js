@@ -93,7 +93,37 @@ document.addEventListener('click', function (e) {
 });
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('modal')) $('modal').hidden = true; });
 
+/* 화면 모드(라이트/다크): 기본은 화이트, 버튼으로 다크를 고르면 그 선택을 기억 */
+var THEME_KEY = 'studyfy_theme';
+var ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+var ICON_SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function currentTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+function paintThemeButton() {
+  var b = $('themeBtn'); if (!b) return;
+  var dark = currentTheme() === 'dark';
+  b.innerHTML = dark ? ICON_SUN : ICON_MOON;
+  b.setAttribute('aria-label', dark ? '라이트 모드로 보기' : '다크 모드로 보기');
+  b.title = b.getAttribute('aria-label');
+}
+function initThemeToggle() {
+  var nav = document.querySelector('.hd .nav'); if (!nav) return;
+  var b = document.createElement('button');
+  b.type = 'button'; b.id = 'themeBtn'; b.className = 'theme-btn';
+  var cta = nav.querySelector('.btn');
+  nav.insertBefore(b, cta || null);
+  b.onclick = function () {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    paintThemeButton();
+  };
+  paintThemeButton();
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   renderFooter();
+  initThemeToggle();
   if ($('testBanner') && isTestMode()) $('testBanner').hidden = false;
 });
