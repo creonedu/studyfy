@@ -72,18 +72,64 @@
         : '<p class="empty">맞는 프로그램을 상담으로 안내해드릴게요.</p>') +
       '<p class="note">확신이 서지 않으면 <a href="#consult">무료 상담</a>에서 컨설턴트가 직접 골라드립니다.</p>';
   }
-  function renderTeam() {
-    $('teamList').innerHTML = SF.team.map(function (m, i) {
-      return '<article class="tm"><span class="no">0' + (i + 1) + '</span><b>' + esc(m.role) + '</b><p>' + esc(m.desc) + '</p></article>';
+  function renderMethods() {
+    $('methodList').innerHTML = SF.methods.map(function (m, i) {
+      return '<article class="md"><span class="no">0' + (i + 1) + '</span><b>' + esc(m.title) + '</b><p>' + esc(m.desc) + '</p></article>';
     }).join('');
   }
+  function li(list) { return '<ul>' + list.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
+  function renderTeam() {
+    var lead = SF.team[0], rest = SF.team.slice(1);
+    var head = '<article class="lead-c"><div class="lead-h"><span class="fld">' + esc(lead.field) + '</span>' +
+      '<h3>' + esc(lead.name) + (lead.en ? ' <small>' + esc(lead.en) + '</small>' : '') + '</h3>' +
+      '<p class="role">' + esc(lead.role) + '</p>' + (lead.motto ? '<p class="motto">“' + esc(lead.motto) + '”</p>' : '') + '</div>' +
+      '<div class="cols"><div><b class="lb">학력</b>' + li(lead.education || []) + '<b class="lb">경력</b>' + li(lead.career) + '</div>' +
+      '<div><b class="lb">실적</b><dl class="res">' + (lead.results || []).map(function (r) {
+        return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
+      }).join('') + '</dl></div></div></article>';
+    $('teamList').innerHTML = head + '<div class="team">' + rest.map(function (m) {
+      return '<article class="tm"><span class="fld">' + esc(m.field) + '</span><h3>' + esc(m.name) + '</h3>' +
+        '<p class="role">' + esc(m.role) + '</p>' + li(m.career) + '</article>';
+    }).join('') + '</div>';
+  }
+
+  /* ── 합격 실적 (연도 탭) ── */
+  var admYear = 0;
+  function sumOf(list) { return list.reduce(function (a, it) { return a + (it[1] || 0); }, 0); }
+  function admRows(list) {
+    return list.map(function (it) {
+      return '<li><b>' + esc(it[0]) + '</b><span class="n">' + it[1] + '명</span>' + (it[2] ? '<span class="who">' + esc(it[2]) + '</span>' : '') + '</li>';
+    }).join('');
+  }
+  function renderAdmissions() {
+    var A = SF.admissions || [];
+    $('results').hidden = !A.length;
+    if (!A.length) return;
+    $('admTabs').innerHTML = A.map(function (y, i) {
+      return '<button class="tab' + (i === admYear ? ' on' : '') + '" data-adm="' + i + '">' + esc(y.year) + '</button>';
+    }).join('');
+    var y = A[admYear];
+    // 'more' 목록은 위 명단과 겹칠 수 있어 합계를 표시하지 않습니다
+    $('admBody').innerHTML = '<p class="adm-t"><b>' + esc(y.year) + '</b>' +
+      (y.more && y.more.length ? ' 합격 실적' : ' 합격 <b class="accent">' + sumOf(y.items) + '명</b>') + '</p>' +
+      '<ul class="adm">' + admRows(y.items) + '</ul>' +
+      (y.more && y.more.length ? '<p class="adm-sub">그 밖의 합격 실적</p><ul class="adm adm-s">' + admRows(y.more) + '</ul>' : '');
+  }
+
+  var reviewAll = false;
   function renderReviews() {
     var r = SF.reviews || [];
     $('reviews').hidden = !r.length;
-    $('reviewList').innerHTML = r.map(function (v) {
-      return '<figure class="rv"><blockquote>' + esc(v.text) + '</blockquote><figcaption>' + esc(v.who) +
+    $('reviewNote').textContent = SF.reviewsSample
+      ? '※ 아래 후기는 화면 구성을 위한 예시입니다. 실제 수강 후기로 교체될 예정입니다.'
+      : '※ 개인정보보호를 위해 일부 수정되었습니다.';
+    var shown = reviewAll ? r : r.slice(0, 6);
+    $('reviewList').innerHTML = shown.map(function (v) {
+      return '<figure class="rv">' + (SF.reviewsSample ? '<span class="badge mute">예시</span>' : '') +
+        '<blockquote>' + esc(v.text) + '</blockquote><figcaption>' + esc(v.who) +
         (v.program ? ' · ' + esc(v.program) : '') + '</figcaption></figure>';
     }).join('');
+    $('reviewMore').hidden = reviewAll || r.length <= 6;
   }
 
   function renderSteps() {
@@ -245,6 +291,8 @@
   /* ── 이벤트 연결 ── */
   document.addEventListener('click', function (e) {
     var t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.adm) { admYear = Number(t.dataset.adm); renderAdmissions(); return; }
+    if (t.id === 'reviewMore') { reviewAll = true; renderReviews(); return; }
     if (t.dataset.fdTarget) { fd.target = t.dataset.fdTarget; renderFinder(); }
     else if (t.dataset.fdConcern) { fd.concern = Number(t.dataset.fdConcern); renderFinder(); if (fd.target) $('fdResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     else if (t.dataset.target) { activeTarget = t.dataset.target; renderTabs(); renderPrograms(); }
@@ -268,6 +316,6 @@
   $('payBtn').onclick = pay;
   window.addEventListener('popstate', route);
 
-  renderServices(); renderFinder(); renderTabs(); renderPrograms(); renderTeam(); renderReviews(); renderSteps(); renderFaq(); renderConsultForm();
+  renderServices(); renderFinder(); renderTabs(); renderPrograms(); renderMethods(); renderTeam(); renderAdmissions(); renderReviews(); renderSteps(); renderFaq(); renderConsultForm();
   route();
 })();
