@@ -81,14 +81,19 @@
   </section>
 
   <section class="sec wrap" id="results">
-    <div class="sec-hd"><p class="eyebrow">Admissions</p><h2>2025학년도 대입 합격 사례</h2>
-      <p class="sub">크레온에듀 컨설팅을 받은 학생들의 실제 합격 결과입니다.</p></div>
-    <ul class="adm" id="admList"></ul>
+    <div class="sec-hd row">
+      <div><p class="eyebrow">Admissions</p><h2>대입 합격 실적</h2>
+        <p class="sub">크레온에듀 컨설턴트와 함께한 학생들의 합격 결과입니다.</p></div>
+      <nav class="tabs" id="admTabs" aria-label="연도별 합격 실적"></nav>
+    </div>
+    <div id="admBody"></div>
   </section>
 
   <section class="sec wrap" id="reviews" hidden>
-    <div class="sec-hd"><p class="eyebrow">Reviews</p><h2>수강 후기</h2></div>
+    <div class="sec-hd"><p class="eyebrow">Reviews</p><h2>수강 후기</h2>
+      <p class="sub" id="reviewNote"></p></div>
     <div class="reviews" id="reviewList"></div>
+    <div class="more-wrap"><button class="btn btn-g btn-sm" id="reviewMore" hidden>후기 더 보기</button></div>
   </section>
 
   <section class="sec wrap" id="faq">
